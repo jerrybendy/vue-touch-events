@@ -76,12 +76,12 @@ var vueTouchEvents = {
 
                 if (!$this.touchMoved) {
                     // emit tap event
-                    if (binding.name === 'tap' && typeof binding.value === 'function') {
-                        binding.value(event)
+                    if (binding.name === 'tap') {
+                        triggerEvent(event, binding)
                     }
 
                 } else if (!$this.swipeOutBounded) {
-                    if (binding.name === 'swipe' && typeof binding.value === 'function') {
+                    if (binding.name === 'swipe') {
                         var swipeOutBounded = options.swipeTolerance, direction
 
                         if (Math.abs($this.startX - $this.currentX) < swipeOutBounded) {
@@ -95,12 +95,12 @@ var vueTouchEvents = {
                         // Only emit the specified event when it has modifiers
                         if (modifiers.left || modifiers.right || modifiers.top || modifiers.bottom) {
                             if (modifiers [direction]) {
-                                binding.value(direction, event)
+                                triggerEvent(event, binding, direction)
                             }
 
                         } else {
                             // Emit a common event when it has no any modifier
-                            binding.value(direction, event)
+                            triggerEvent(event, binding, direction)
                         }
                     }
                 }
@@ -110,14 +110,29 @@ var vueTouchEvents = {
                     binding = this.$$binding
 
                 if (!$this.supportTouch && !options.disableClick && binding.name === 'tap' && typeof binding.value === 'function') {
-                    binding.value(event)
+                    triggerEvent(event, binding)
+                }
+            },
+            triggerEvent = function (event, binding, param) {
+
+                // handle `self` modifier`
+                if (binding.modifiers.self && event.target !== event.currentTarget) {
+                    return null
+                }
+
+                if (typeof binding.value === 'function') {
+                    if (param) {
+                        binding.value(param, event)
+                    } else {
+                        binding.value(event)
+                    }
                 }
             }
 
 
         function bindEvents($el, binding) {
             $el.$$touchObj = {
-                supportTouch: false,  // will change to true when `touchstart` event first trigger
+                supportTouch: false  // will change to true when `touchstart` event first trigger
             }
             $el.$$binding = binding
 

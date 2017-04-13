@@ -76,6 +76,13 @@ export default {
 }
 ```
 
+## Change History
+
+#### v0.1.1
+* `Feature` support `self` modifier
+
+
 ## LICENSE
 
 MIT License
+
