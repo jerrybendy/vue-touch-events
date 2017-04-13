@@ -1,0 +1,25 @@
+{
+  "name": "vue2-touch-events",
+  "version": "0.1.0",
+  "description": "Tap and swipe event support for vueJS2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jerrybendy/vue-touch-events.git"
+  },
+  "keywords": [
+    "vue",
+    "touch",
+    "tap",
+    "swipe"
+  ],
+  "author": "Jerry Bendy <jerry@icewingcc.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jerrybendy/vue-touch-events/issues"
+  },
+  "homepage": "https://github.com/jerrybendy/vue-touch-events#readme"
+}
