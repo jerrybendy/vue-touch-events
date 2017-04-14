@@ -21,6 +21,7 @@ var vueTouchEvents = {
         options.disableClick = options.disableClick || false
         options.tapTolerance = options.tapTolerance || 10
         options.swipeTolerance = options.swipeTolerance || 30
+        options.touchClass = options.touchClass || ''
 
 
         var touchStartEvent = function (event) {
@@ -31,6 +32,8 @@ var vueTouchEvents = {
                 if ($this.touchStarted) {
                     return
                 }
+
+                addTouchClass(this)
 
                 $this.touchStarted = true
 
@@ -65,6 +68,8 @@ var vueTouchEvents = {
             touchCancelEvent = function () {
                 var $this = this.$$touchObj
 
+                removeTouchClass(this)
+
                 $this.touchStarted = $this.touchMoved = false
                 $this.startX = $this.startY = 0
             },
@@ -74,14 +79,16 @@ var vueTouchEvents = {
 
                 $this.touchStarted = false
 
+                removeTouchClass(this)
+
                 if (!$this.touchMoved) {
                     // emit tap event
-                    if (binding.name === 'tap') {
+                    if (binding.arg === 'tap') {
                         triggerEvent(event, binding)
                     }
 
                 } else if (!$this.swipeOutBounded) {
-                    if (binding.name === 'swipe') {
+                    if (binding.arg === 'swipe') {
                         var swipeOutBounded = options.swipeTolerance, direction
 
                         if (Math.abs($this.startX - $this.currentX) < swipeOutBounded) {
@@ -109,9 +116,19 @@ var vueTouchEvents = {
                 var $this = this.$$touchObj,
                     binding = this.$$binding
 
-                if (!$this.supportTouch && !options.disableClick && binding.name === 'tap' && typeof binding.value === 'function') {
+                if (!$this.supportTouch &&
+                    !options.disableClick &&
+                    binding.arg === 'tap' &&
+                    typeof binding.value === 'function'
+                ) {
                     triggerEvent(event, binding)
                 }
+            },
+            mouseEnterEvent = function () {
+                addTouchClass(this)
+            },
+            mouseLeaveEvent = function () {
+                removeTouchClass(this)
             },
             triggerEvent = function (event, binding, param) {
 
@@ -127,54 +144,58 @@ var vueTouchEvents = {
                         binding.value(event)
                     }
                 }
+            },
+            addTouchClass = function ($el) {
+                var className = $el.$$touchClass || options.touchClass
+                $el.classList.add(className)
+            },
+            removeTouchClass = function ($el) {
+                var className = $el.$$touchClass || options.touchClass
+                $el.classList.remove(className)
             }
 
 
-        function bindEvents($el, binding) {
-            $el.$$touchObj = {
-                supportTouch: false  // will change to true when `touchstart` event first trigger
-            }
-            $el.$$binding = binding
-
-            $el.addEventListener('touchstart', touchStartEvent)
-            $el.addEventListener('touchmove', touchMoveEvent)
-            $el.addEventListener('touchcancel', touchCancelEvent)
-            $el.addEventListener('touchend', touchEndEvent)
-
-            if (!options.disableClick) {
-                $el.addEventListener('click', clickEvent)
-            }
-        }
-
-        function unbindEvents($el) {
-            $el.removeEventListener('touchstart', touchStartEvent)
-            $el.removeEventListener('touchmove', touchMoveEvent)
-            $el.removeEventListener('touchcancel', touchCancelEvent)
-            $el.removeEventListener('touchend', touchEndEvent)
-
-            if (!options.disableClick) {
-                $el.removeEventListener('click', clickEvent)
-            }
-        }
-
-
-        Vue.directive('tap', {
+        Vue.directive('touch', {
             bind: function ($el, binding) {
-                bindEvents($el, binding)
+                $el.$$touchObj = {
+                    // will change to true when `touchstart` event first trigger
+                    supportTouch: false
+                }
+                $el.$$binding = binding
+
+                // parse the arg argument, default is `tap`
+                $el.$$binding.arg = binding.arg ? binding.arg : 'tap'
+
+
+                $el.addEventListener('touchstart', touchStartEvent)
+                $el.addEventListener('touchmove', touchMoveEvent)
+                $el.addEventListener('touchcancel', touchCancelEvent)
+                $el.addEventListener('touchend', touchEndEvent)
+
+                if (!options.disableClick) {
+                    $el.addEventListener('click', clickEvent)
+                    $el.addEventListener('mouseenter', mouseEnterEvent)
+                    $el.addEventListener('mouseleave', mouseLeaveEvent)
+                }
             },
 
             unbind: function ($el) {
-                unbindEvents($el)
+                $el.removeEventListener('touchstart', touchStartEvent)
+                $el.removeEventListener('touchmove', touchMoveEvent)
+                $el.removeEventListener('touchcancel', touchCancelEvent)
+                $el.removeEventListener('touchend', touchEndEvent)
+
+                if (!options.disableClick) {
+                    $el.removeEventListener('click', clickEvent)
+                    $el.removeEventListener('mouseenter', mouseEnterEvent)
+                    $el.removeEventListener('mouseleave', mouseLeaveEvent)
+                }
             }
         })
 
-        Vue.directive('swipe', {
+        Vue.directive('touch-class', {
             bind: function ($el, binding) {
-                bindEvents($el, binding)
-            },
-
-            unbind: function ($el) {
-                unbindEvents($el)
+                $el.$$touchClass = binding.value
             }
         })
     }
