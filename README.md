@@ -37,7 +37,7 @@ In your `.vue` file:
 <span v-touch:swipe="swipeHandler">Swipe Here</span>
 
 <!-- only when swipe left can trigger the callback -->
-<span v-touch:swpie.left="swipeHandler">Swipe Here</span>
+<span v-touch:swipe.left="swipeHandler">Swipe Here</span>
 ```
 
 
