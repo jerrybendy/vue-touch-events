@@ -145,11 +145,11 @@ var vueTouchEvents = {
             },
             addTouchClass = function ($el) {
                 var className = $el.$$touchClass || options.touchClass
-                $el.classList.add(className)
+                className && $el.classList.add(className)
             },
             removeTouchClass = function ($el) {
                 var className = $el.$$touchClass || options.touchClass
-                $el.classList.remove(className)
+                className && $el.classList.remove(className)
             }
 
 
