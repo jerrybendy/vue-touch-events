@@ -5,11 +5,24 @@
  */
 
 function touchX(event) {
-    return event.touches [0].clientX;
+    return event.touches[0].clientX;
 }
 
 function touchY(event) {
-    return event.touches [0].clientY;
+    return event.touches[0].clientY;
+}
+
+function isPassiveSupported() {
+    var supportsPassive = false;
+    try {
+        var opts = Object.defineProperty({}, 'passive', {
+            get: function() {
+                supportsPassive = true;
+            }
+        });
+        window.addEventListener('test', null, opts);
+    } catch (e) {}
+    return supportsPassive;
 }
 
 
@@ -22,6 +35,7 @@ var vueTouchEvents = {
         options.tapTolerance = options.tapTolerance || 10
         options.swipeTolerance = options.swipeTolerance || 30
         options.touchClass = options.touchClass || ''
+        options.isPassiveSupported = isPassiveSupported()
 
 
         var touchStartEvent = function (event) {
@@ -194,8 +208,9 @@ var vueTouchEvents = {
                     return
                 }
 
-                $el.addEventListener('touchstart', touchStartEvent)
-                $el.addEventListener('touchmove', touchMoveEvent)
+                var passiveOpt = options.isPassiveSupported ? { passive: true } : false;
+                $el.addEventListener('touchstart', touchStartEvent, passiveOpt)
+                $el.addEventListener('touchmove', touchMoveEvent, passiveOpt)
                 $el.addEventListener('touchcancel', touchCancelEvent)
                 $el.addEventListener('touchend', touchEndEvent)
 
