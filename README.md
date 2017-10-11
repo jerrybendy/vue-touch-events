@@ -132,6 +132,30 @@ This four modifiers are for `v-touch:swipe` only, to specify which direction you
 
 Same to `v-on:click.self`, only trigger events when the event target same to itself.
 
+## Others
+
+### How to add extra parameters
+As mentioned by [#3](https://github.com/jerrybendy/vue-touch-events/issues/3), if you want to add extra 
+parameters for `v-touch`, you can't do that like `v-on`. The hack is that you can let your method returns
+a `function` and handle the extra parameters in the returned function.
+
+```html
+<div v-touch:swipe="myMethod('myOtherParam')">Swipe</div>
+```
+
+```js
+export default {
+  methods: {
+    myMethod (param) {
+      return function(direction) {
+        console.log(direction, param);
+        // do something ~
+      }
+    }
+  }
+}
+```
+
 ## Change History
 
 [Look at here](https://github.com/jerrybendy/vue-touch-events/releases)
