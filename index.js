@@ -176,12 +176,12 @@ var vueTouchEvents = {
                         // an object contains all callbacks registered,
                         // key is event name, value is an array
                         callbacks: {},
-                        // prevent bind twice, set to true when event binded
+                        // prevent bind twice, set to true when event bound
                         hasBindTouchEvents: false
                     }
 
 
-                // registe callback
+                // register callback
                 var eventType = binding.arg ? binding.arg : 'tap'
                 if (eventType === 'swipe') {
                     var _m = binding.modifiers

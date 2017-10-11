@@ -134,12 +134,7 @@ Same to `v-on:click.self`, only trigger events when the event target same to its
 
 ## Change History
 
-#### v0.2.0
-* `Change` change the main API. Use `v-touch` instead `v-tap` and `v-swipe`
-* `Feature` add `v-touch-class` directive, and support `touchClass` global setting
-
-#### v0.1.1
-* `Feature` support `self` modifier
+[Look at here](https://github.com/jerrybendy/vue-touch-events/releases)
 
 
 ## LICENSE
