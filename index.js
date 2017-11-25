@@ -87,7 +87,7 @@ var vueTouchEvents = {
                 $this.touchStarted = $this.touchMoved = false
                 $this.startX = $this.startY = 0
             },
-            touchEndEvent = function () {
+            touchEndEvent = function (event) {
                 var $this = this.$$touchObj
 
                 $this.touchStarted = false
