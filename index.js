@@ -182,7 +182,7 @@ var vueTouchEvents = {
 
 
                 // register callback
-                var eventType = binding.arg ? binding.arg : 'tap'
+                var eventType = binding.arg || 'tap'
                 if (eventType === 'swipe') {
                     var _m = binding.modifiers
                     if (_m.left || _m.right || _m.top || _m.bottom) {
