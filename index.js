@@ -12,7 +12,7 @@ function touchY(event) {
     return event.touches[0].clientY;
 }
 
-function isPassiveSupported() {
+var isPassiveSupported = (function() {
     var supportsPassive = false;
     try {
         var opts = Object.defineProperty({}, 'passive', {
@@ -23,149 +23,159 @@ function isPassiveSupported() {
         window.addEventListener('test', null, opts);
     } catch (e) {}
     return supportsPassive;
-}
+})()
 
 
 var vueTouchEvents = {
     install: function (Vue, options) {
 
         // Set default options
-        options = options || {}
-        options.disableClick = options.disableClick || false
-        options.tapTolerance = options.tapTolerance || 10
-        options.swipeTolerance = options.swipeTolerance || 30
-        options.touchClass = options.touchClass || ''
-        options.isPassiveSupported = isPassiveSupported()
+        options = Object.assign({}, {
+            disableClick: false,
+            tapTolerance: 10,
+            swipeTolerance: 30,
+            minLongTapTimeInterval: 600,
+            touchClass: '',
+        }, options || {})
 
 
-        var touchStartEvent = function (event) {
-                var $this = this.$$touchObj
+        function touchStartEvent(event) {
+            var $this = this.$$touchObj
 
-                $this.supportTouch = true
+            $this.supportTouch = true
 
-                if ($this.touchStarted) {
-                    return
-                }
-
-                addTouchClass(this)
-
-                $this.touchStarted = true
-
-                $this.touchMoved = false
-                $this.swipeOutBounded = false
-
-                $this.startX = touchX(event)
-                $this.startY = touchY(event)
-
-                $this.currentX = 0
-                $this.currentY = 0
-            },
-            touchMoveEvent = function (event) {
-                var $this = this.$$touchObj
-
-                $this.currentX = touchX(event)
-                $this.currentY = touchY(event)
-
-                if (!$this.touchMoved) {
-                    var tapTolerance = options.tapTolerance
-
-                    $this.touchMoved = Math.abs($this.startX - $this.currentX) > tapTolerance ||
-                        Math.abs($this.startY - $this.currentY) > tapTolerance
-
-                } else if (!$this.swipeOutBounded) {
-                    var swipeOutBounded = options.swipeTolerance
-
-                    $this.swipeOutBounded = Math.abs($this.startX - $this.currentX) > swipeOutBounded &&
-                        Math.abs($this.startY - $this.currentY) > swipeOutBounded
-                }
-            },
-            touchCancelEvent = function () {
-                var $this = this.$$touchObj
-
-                removeTouchClass(this)
-
-                $this.touchStarted = $this.touchMoved = false
-                $this.startX = $this.startY = 0
-            },
-            touchEndEvent = function (event) {
-                var $this = this.$$touchObj
-
-                $this.touchStarted = false
-
-                removeTouchClass(this)
-
-                if (!$this.touchMoved) {
-                    // emit tap event
-                    triggerEvent(event, this, 'tap')
-
-                } else if (!$this.swipeOutBounded) {
-                    var swipeOutBounded = options.swipeTolerance, direction
-
-                    if (Math.abs($this.startX - $this.currentX) < swipeOutBounded) {
-                        direction = $this.startY > $this.currentY ? "top" : "bottom"
-
-                    } else {
-                        direction = $this.startX > $this.currentX ? "left" : "right"
-                    }
-
-                    // Only emit the specified event when it has modifiers
-                    if ($this.callbacks['swipe.' + direction]) {
-                        triggerEvent(event, this, 'swipe.' + direction, direction)
-
-                    } else {
-                        // Emit a common event when it has no any modifier
-                        triggerEvent(event, this, 'swipe', direction)
-                    }
-                }
-            },
-            clickEvent = function (event) {
-                var $this = this.$$touchObj
-
-                if (!$this.supportTouch && !options.disableClick) {
-                    triggerEvent(event, this, 'tap')
-                }
-            },
-            mouseEnterEvent = function () {
-                addTouchClass(this)
-            },
-            mouseLeaveEvent = function () {
-                removeTouchClass(this)
-            },
-            triggerEvent = function (e, $el, eventType, param) {
-                var $this = $el.$$touchObj
-
-                // get the callback list
-                var callbacks = $this.callbacks[eventType] || []
-                if (callbacks.length === 0) {
-                    return null
-                }
-
-                for (var i = 0; i < callbacks.length; i++) {
-                    var binding = callbacks[i]
-
-                    // handle `self` modifier`
-                    if (binding.modifiers.self && e.target !== e.currentTarget) {
-                        continue
-                    }
-
-                    if (typeof binding.value === 'function') {
-                        if (param) {
-                            binding.value(param, e)
-                        } else {
-                            binding.value(e)
-                        }
-                    }
-                }
-            },
-            addTouchClass = function ($el) {
-                var className = $el.$$touchClass || options.touchClass
-                className && $el.classList.add(className)
-            },
-            removeTouchClass = function ($el) {
-                var className = $el.$$touchClass || options.touchClass
-                className && $el.classList.remove(className)
+            if ($this.touchStarted) {
+                return
             }
 
+            addTouchClass(this)
+
+            $this.touchStarted = true
+
+            $this.touchMoved = false
+            $this.swipeOutBounded = false
+
+            $this.startX = touchX(event)
+            $this.startY = touchY(event)
+
+            $this.currentX = 0
+            $this.currentY = 0
+
+        }
+
+        function touchMoveEvent(event) {
+            var $this = this.$$touchObj
+
+            $this.currentX = touchX(event)
+            $this.currentY = touchY(event)
+
+            if (!$this.touchMoved) {
+                var tapTolerance = options.tapTolerance
+
+                $this.touchMoved = Math.abs($this.startX - $this.currentX) > tapTolerance ||
+                    Math.abs($this.startY - $this.currentY) > tapTolerance
+
+            } else if (!$this.swipeOutBounded) {
+                var swipeOutBounded = options.swipeTolerance
+
+                $this.swipeOutBounded = Math.abs($this.startX - $this.currentX) > swipeOutBounded &&
+                    Math.abs($this.startY - $this.currentY) > swipeOutBounded
+            }
+        }
+
+        function touchCancelEvent() {
+            var $this = this.$$touchObj
+
+            removeTouchClass(this)
+
+            $this.touchStarted = $this.touchMoved = false
+            $this.startX = $this.startY = 0
+        }
+
+        function touchEndEvent(event) {
+            var $this = this.$$touchObj
+
+            $this.touchStarted = false
+
+            removeTouchClass(this)
+
+            if (!$this.touchMoved) {
+                // emit tap event
+                triggerEvent(event, this, 'tap')
+
+            } else if (!$this.swipeOutBounded) {
+                var swipeOutBounded = options.swipeTolerance, direction
+
+                if (Math.abs($this.startX - $this.currentX) < swipeOutBounded) {
+                    direction = $this.startY > $this.currentY ? "top" : "bottom"
+
+                } else {
+                    direction = $this.startX > $this.currentX ? "left" : "right"
+                }
+
+                // Only emit the specified event when it has modifiers
+                if ($this.callbacks['swipe.' + direction]) {
+                    triggerEvent(event, this, 'swipe.' + direction, direction)
+
+                } else {
+                    // Emit a common event when it has no any modifier
+                    triggerEvent(event, this, 'swipe', direction)
+                }
+            }
+        }
+
+        function clickEvent(event) {
+            var $this = this.$$touchObj
+
+            if (!$this.supportTouch && !options.disableClick) {
+                triggerEvent(event, this, 'tap')
+            }
+        }
+
+        function mouseEnterEvent() {
+            addTouchClass(this)
+        }
+
+        function mouseLeaveEvent() {
+            removeTouchClass(this)
+        }
+
+        function triggerEvent(e, $el, eventType, param) {
+            var $this = $el.$$touchObj
+
+            // get the callback list
+            var callbacks = $this.callbacks[eventType] || []
+            if (callbacks.length === 0) {
+                return null
+            }
+
+            for (var i = 0; i < callbacks.length; i++) {
+                var binding = callbacks[i]
+
+                // handle `self` modifier`
+                if (binding.modifiers.self && e.target !== e.currentTarget) {
+                    continue
+                }
+
+                if (typeof binding.value === 'function') {
+                    if (param) {
+                        binding.value(param, e)
+                    } else {
+                        binding.value(e)
+                    }
+                }
+            }
+        }
+
+        function addTouchClass($el) {
+            var className = $el.$$touchClass || options.touchClass
+            className && $el.classList.add(className)
+        }
+
+        function removeTouchClass($el) {
+            var className = $el.$$touchClass || options.touchClass
+            className && $el.classList.remove(className)
+        }
 
         Vue.directive('touch', {
             bind: function ($el, binding) {
@@ -208,7 +218,7 @@ var vueTouchEvents = {
                     return
                 }
 
-                var passiveOpt = options.isPassiveSupported ? { passive: true } : false;
+                var passiveOpt = isPassiveSupported ? { passive: true } : false;
                 $el.addEventListener('touchstart', touchStartEvent, passiveOpt)
                 $el.addEventListener('touchmove', touchMoveEvent, passiveOpt)
                 $el.addEventListener('touchcancel', touchCancelEvent)
