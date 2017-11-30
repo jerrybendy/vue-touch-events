@@ -1,7 +1,7 @@
 {
   "name": "vue2-touch-events",
   "version": "1.0.0",
-  "description": "Tap and swipe event support for vueJS2",
+  "description": "Simple touch events support for vueJS2",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,7 +14,8 @@
     "vue",
     "touch",
     "tap",
-    "swipe"
+    "swipe",
+    "longtap"
   ],
   "author": "Jerry Bendy <jerry@icewingcc.com>",
   "license": "MIT",
