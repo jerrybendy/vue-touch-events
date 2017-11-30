@@ -34,8 +34,8 @@ var vueTouchEvents = {
             disableClick: false,
             tapTolerance: 10,
             swipeTolerance: 30,
-            minLongTapTimeInterval: 600,
-            touchClass: '',
+            longTapTimeInterval: 400,
+            touchClass: ''
         }, options || {})
 
 
@@ -61,6 +61,7 @@ var vueTouchEvents = {
             $this.currentX = 0
             $this.currentY = 0
 
+            $this.touchStartTime = event.timeStamp
         }
 
         function touchMoveEvent(event) {
@@ -100,8 +101,15 @@ var vueTouchEvents = {
             removeTouchClass(this)
 
             if (!$this.touchMoved) {
-                // emit tap event
-                triggerEvent(event, this, 'tap')
+                // detect if this is a longTap event or not
+                if ($this.callbacks.longtap && event.timeStamp - $this.touchStartTime > options.longTapTimeInterval) {
+                    event.preventDefault()
+                    triggerEvent(event, this, 'longtap')
+
+                } else {
+                    // emit tap event
+                    triggerEvent(event, this, 'tap')
+                }
 
             } else if (!$this.swipeOutBounded) {
                 var swipeOutBounded = options.swipeTolerance, direction
@@ -193,24 +201,26 @@ var vueTouchEvents = {
 
                 // register callback
                 var eventType = binding.arg || 'tap'
-                if (eventType === 'swipe') {
-                    var _m = binding.modifiers
-                    if (_m.left || _m.right || _m.top || _m.bottom) {
-                        for (var i in binding.modifiers) {
-                            if (['left', 'right', 'top', 'bottom'].indexOf(i) >= 0) {
-                                var _e = 'swipe.' + i
-                                $el.$$touchObj.callbacks[_e] = $el.$$touchObj.callbacks[_e] || []
-                                $el.$$touchObj.callbacks[_e].push(binding)
+                switch (eventType) {
+                    case 'swipe':
+                        var _m = binding.modifiers
+                        if (_m.left || _m.right || _m.top || _m.bottom) {
+                            for (var i in binding.modifiers) {
+                                if (['left', 'right', 'top', 'bottom'].indexOf(i) >= 0) {
+                                    var _e = 'swipe.' + i
+                                    $el.$$touchObj.callbacks[_e] = $el.$$touchObj.callbacks[_e] || []
+                                    $el.$$touchObj.callbacks[_e].push(binding)
+                                }
                             }
+                        } else {
+                            $el.$$touchObj.callbacks.swipe = $el.$$touchObj.callbacks.swipe || []
+                            $el.$$touchObj.callbacks.swipe.push(binding)
                         }
-                    } else {
-                        $el.$$touchObj.callbacks.swipe = $el.$$touchObj.callbacks.swipe || []
-                        $el.$$touchObj.callbacks.swipe.push(binding)
-                    }
+                        break
 
-                } else {
-                    $el.$$touchObj.callbacks.tap = $el.$$touchObj.callbacks.tap || []
-                    $el.$$touchObj.callbacks.tap.push(binding)
+                    default:
+                        $el.$$touchObj.callbacks[eventType] = $el.$$touchObj.callbacks[eventType] || []
+                        $el.$$touchObj.callbacks[eventType].push(binding)
                 }
 
                 // prevent bind twice

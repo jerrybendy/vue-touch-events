@@ -38,6 +38,15 @@ In your `.vue` file:
 
 <!-- only when swipe left can trigger the callback -->
 <span v-touch:swipe.left="swipeHandler">Swipe Here</span>
+
+<!-- bind a long tap event -->
+<span v-touch:longtap="longtapHandler">Long Tap Event</span>
+
+<!-- you can even mix multiple events -->
+<span v-touch:tap="tapHandler" 
+    v-touch:longtap="longtapHandler" 
+    v-touch:swipe.left="swipeLeftHandler"
+    v-touch:swipe.right="swipeRightHandler">Mix Multiple Events</span>
 ```
 
 
@@ -51,6 +60,7 @@ Vue.use(Vue2TouchEvents, {
     touchClass: '',
     tapTolerance: 10,
     swipeTolerance: 30,
+    longTapTimeInterval: 400
 })
 ```
 
@@ -59,7 +69,7 @@ Vue.use(Vue2TouchEvents, {
 
     You should keep this value default if you use your website on both mobile and PC.
 
-    If your website use on mobile only, it's a good choice to set this value `true` to get a better user experience, and it can resolve some touch pass-through issue.
+    If your website uses on mobile only, it's a good choice to set this value to `true` to get a better user experience, and it can resolve some touch pass-through issue.
 
 * `touchClass`  default: `''`. Add an extra CSS class when touch start, and remove it when touch end. 
 
@@ -69,17 +79,20 @@ Vue.use(Vue2TouchEvents, {
     
 * `tapTolerance` default `10`. The tolerance to ensure whether the tap event effective or not.
 * `swipeTolerance` default `30`. The tolerance to ensure whether the swipe event effective or not.
+* `longTapTimeInterval` default `400` in millsecond. The minimum time interval to detect whether long tap event effective or not.
 
 If you don't want bind `click` event at same time, just set `disableClick` to `true`.
 
 ### Directives
 
 #### v-touch
-Bind the `v-touch` directive to components which you want enable touch events. 
+Bind the `v-touch` directive to components which you want to enable touch events. 
 
-`v-touch` accepts an argument to tell it which event you want to bind. `tap` and `swipe` are available.
+`v-touch` accepts an argument to tell it which event you want to bind. `tap`, `longtap` and `swipe` are available.
 
-
+```html
+<span v-touch:tap="tapHandler">Tap</span>
+```
 
 The first argument of the `v-swipe` callback is the direction of swipe event. It could be `left`, `right`, `top` or `bottom`.
 
@@ -147,7 +160,7 @@ a `function` and handle the extra parameters in the returned function.
 export default {
   methods: {
     myMethod (param) {
-      return function(direction) {
+      return function(direction, event) {
         console.log(direction, param);
         // do something ~
       }
