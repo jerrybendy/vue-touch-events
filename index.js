@@ -79,8 +79,8 @@ var vueTouchEvents = {
             } else if (!$this.swipeOutBounded) {
                 var swipeOutBounded = options.swipeTolerance
 
-                $this.swipeOutBounded = Math.abs($this.startX - $this.currentX) > swipeOutBounded &&
-                    Math.abs($this.startY - $this.currentY) > swipeOutBounded
+                $this.swipeOutBounded = Math.abs($this.startX - $this.currentX) > swipeOutBounded ||
+                                        Math.abs($this.startY - $this.currentY) > swipeOutBounded
             }
         }
 
@@ -111,7 +111,7 @@ var vueTouchEvents = {
                     triggerEvent(event, this, 'tap')
                 }
 
-            } else if (!$this.swipeOutBounded) {
+            } else if ($this.swipeOutBounded) {
                 var swipeOutBounded = options.swipeTolerance, direction
 
                 if (Math.abs($this.startX - $this.currentX) < swipeOutBounded) {
