@@ -3,9 +3,9 @@ Enable tap / swipe events for VueJS 2.x
 
 > Note: This is for **Vue 2.x** only.
 
-## Install 
+## Install
 
-To install with npm or yarn, use 
+To install with npm or yarn, use
 
 ```shell
 npm i -S vue2-touch-events
@@ -43,8 +43,8 @@ In your `.vue` file:
 <span v-touch:longtap="longtapHandler">Long Tap Event</span>
 
 <!-- you can even mix multiple events -->
-<span v-touch:tap="tapHandler" 
-    v-touch:longtap="longtapHandler" 
+<span v-touch:tap="tapHandler"
+    v-touch:longtap="longtapHandler"
     v-touch:swipe.left="swipeLeftHandler"
     v-touch:swipe.right="swipeRightHandler">Mix Multiple Events</span>
 ```
@@ -65,18 +65,18 @@ Vue.use(Vue2TouchEvents, {
 ```
 
 
-* `disableClick` default `false`. Use touch event only, will not trigger click event. 
+* `disableClick` default `false`. Use touch event only, will not trigger click event.
 
     You should keep this value default if you use your website on both mobile and PC.
 
     If your website uses on mobile only, it's a good choice to set this value to `true` to get a better user experience, and it can resolve some touch pass-through issue.
 
-* `touchClass`  default: `''`. Add an extra CSS class when touch start, and remove it when touch end. 
+* `touchClass`  default: `''`. Add an extra CSS class when touch start, and remove it when touch end.
 
     If `disableClick` is `false`, it will bind `mouseenter` and `mouseleave` event on your components too. So you can use it instead of `:hover` and `:active`.
 
     This is a global config, and you can use `v-touch-class` directive to overwrite this setting in a single component.
-    
+
 * `tapTolerance` default `10`. The tolerance to ensure whether the tap event effective or not.
 * `swipeTolerance` default `30`. The tolerance to ensure whether the swipe event effective or not.
 * `longTapTimeInterval` default `400` in millsecond. The minimum time interval to detect whether long tap event effective or not.
@@ -86,7 +86,7 @@ If you don't want bind `click` event at same time, just set `disableClick` to `t
 ### Directives
 
 #### v-touch
-Bind the `v-touch` directive to components which you want to enable touch events. 
+Bind the `v-touch` directive to components which you want to enable touch events.
 
 `v-touch` accepts an argument to tell it which event you want to bind. `tap`, `longtap` and `swipe` are available.
 
@@ -142,13 +142,18 @@ span.active {
 This four modifiers are for `v-touch:swipe` only, to specify which direction you want to bind events to.
 
 #### self
+Same as `v-on:click.self`, only trigger events when the event target is the `currentTarget`.
 
-Same to `v-on:click.self`, only trigger events when the event target same to itself.
+#### stop
+Same as `v-on:click.stop`, stops event propagation.
+
+#### prevent
+Same as `v-on:click.prevent`, prevents default event handler from firing.
 
 ## Others
 
 ### How to add extra parameters
-As mentioned by [#3](https://github.com/jerrybendy/vue-touch-events/issues/3), if you want to add extra 
+As mentioned by [#3](https://github.com/jerrybendy/vue-touch-events/issues/3), if you want to add extra
 parameters for `v-touch`, you can't do that like `v-on`. The hack is that you can let your method returns
 a `function` and handle the extra parameters in the returned function.
 
