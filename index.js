@@ -160,6 +160,14 @@ var vueTouchEvents = {
             for (var i = 0; i < callbacks.length; i++) {
                 var binding = callbacks[i]
 
+                if (binding.modifiers.stop) {
+                    e.stopPropagation();
+                }
+
+                if (binding.modifiers.prevent) {
+                    e.preventDefault();
+                }
+
                 // handle `self` modifier`
                 if (binding.modifiers.self && e.target !== e.currentTarget) {
                     continue
