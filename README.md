@@ -42,10 +42,15 @@ In your `.vue` file:
 <!-- bind a long tap event -->
 <span v-touch:longtap="longtapHandler">Long Tap Event</span>
 
+<!-- bind a start and end event -->
+<span v-touch:start="startHandler" v-touch:end="endHandler">Down,start/Up,end Event</span>
+
 <!-- you can even mix multiple events -->
 <span v-touch:tap="tapHandler"
     v-touch:longtap="longtapHandler"
     v-touch:swipe.left="swipeLeftHandler"
+    v-touch:start="startHandler" 
+    v-touch:end="endHandler"
     v-touch:swipe.right="swipeRightHandler">Mix Multiple Events</span>
 ```
 

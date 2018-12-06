@@ -40,7 +40,7 @@ var vueTouchEvents = {
 
 
         function touchStartEvent(event) {
-            var $this = this.$$touchObj
+			var $this = this.$$touchObj
 
             $this.supportTouch = true
 
@@ -62,6 +62,8 @@ var vueTouchEvents = {
             $this.currentY = 0
 
             $this.touchStartTime = event.timeStamp
+
+			triggerEvent(event, this, 'start')
         }
 
         function touchMoveEvent(event) {
@@ -110,6 +112,7 @@ var vueTouchEvents = {
                     // emit tap event
                     triggerEvent(event, this, 'tap')
                 }
+				triggerEvent(event, this, 'end')
 
             } else if (!$this.swipeOutBounded) {
                 var swipeOutBounded = options.swipeTolerance, direction
@@ -139,6 +142,22 @@ var vueTouchEvents = {
                 triggerEvent(event, this, 'tap')
             }
         }
+
+		function mouseDownEvent(event) {
+			var $this = this.$$touchObj
+
+			if (!$this.supportTouch && !options.disableClick) {
+				triggerEvent(event, this, 'start')
+			}
+		}
+
+		function mouseUpEvent(event) {
+			var $this = this.$$touchObj
+
+			if (!$this.supportTouch && !options.disableClick) {
+				triggerEvent(event, this, 'end')
+			}
+		}
 
         function mouseEnterEvent() {
             addTouchClass(this)
@@ -227,8 +246,9 @@ var vueTouchEvents = {
                         break
 
                     default:
-                        $el.$$touchObj.callbacks[eventType] = $el.$$touchObj.callbacks[eventType] || []
+						$el.$$touchObj.callbacks[eventType] = $el.$$touchObj.callbacks[eventType] || []
                         $el.$$touchObj.callbacks[eventType].push(binding)
+						console.log(eventType, $el.$$touchObj.callbacks);
                 }
 
                 // prevent bind twice
@@ -237,13 +257,16 @@ var vueTouchEvents = {
                 }
 
                 var passiveOpt = isPassiveSupported ? { passive: true } : false;
-                $el.addEventListener('touchstart', touchStartEvent, passiveOpt)
+				console.log(passiveOpt);
+				$el.addEventListener('touchstart', touchStartEvent, passiveOpt)
                 $el.addEventListener('touchmove', touchMoveEvent, passiveOpt)
                 $el.addEventListener('touchcancel', touchCancelEvent)
                 $el.addEventListener('touchend', touchEndEvent)
 
                 if (!options.disableClick) {
                     $el.addEventListener('click', clickEvent)
+					$el.addEventListener('mousedown', mouseDownEvent)
+					$el.addEventListener('mouseup', mouseUpEvent)
                     $el.addEventListener('mouseenter', mouseEnterEvent)
                     $el.addEventListener('mouseleave', mouseLeaveEvent)
                 }
@@ -260,6 +283,8 @@ var vueTouchEvents = {
 
                 if (!options.disableClick) {
                     $el.removeEventListener('click', clickEvent)
+					$el.removeEventListener('mousedown', mouseDownEvent)
+					$el.removeEventListener('mouseup', mouseUpEvent)
                     $el.removeEventListener('mouseenter', mouseEnterEvent)
                     $el.removeEventListener('mouseleave', mouseLeaveEvent)
                 }
