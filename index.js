@@ -248,7 +248,6 @@ var vueTouchEvents = {
                     default:
                         $el.$$touchObj.callbacks[eventType] = $el.$$touchObj.callbacks[eventType] || []
                         $el.$$touchObj.callbacks[eventType].push(binding)
-						console.log(eventType, $el.$$touchObj.callbacks);
                 }
 
                 // prevent bind twice
