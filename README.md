@@ -45,6 +45,11 @@ In your `.vue` file:
 <!-- bind a start and end event -->
 <span v-touch:start="startHandler" v-touch:end="endHandler">Down,start/Up,end Event</span>
 
+<!-- bind a move and moving event -->
+<span v-touch:moved="movedHandler">Triggered once when starting to move and tapTolerance is exceeded</span>
+<span v-touch:moving="movingHandler">Continuously triggering Event</span>
+
+
 <!-- you can even mix multiple events -->
 <span v-touch:tap="tapHandler"
     v-touch:longtap="longtapHandler"

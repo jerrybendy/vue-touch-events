@@ -78,12 +78,20 @@ var vueTouchEvents = {
                 $this.touchMoved = Math.abs($this.startX - $this.currentX) > tapTolerance ||
                     Math.abs($this.startY - $this.currentY) > tapTolerance
 
+                if($this.touchMoved){
+					triggerEvent(event, this, 'moved')
+                }
+
             } else if (!$this.swipeOutBounded) {
                 var swipeOutBounded = options.swipeTolerance
 
                 $this.swipeOutBounded = Math.abs($this.startX - $this.currentX) > swipeOutBounded &&
                     Math.abs($this.startY - $this.currentY) > swipeOutBounded
             }
+
+			if($this.touchMoved){
+				triggerEvent(event, this, 'moving')
+			}
         }
 
         function touchCancelEvent() {
