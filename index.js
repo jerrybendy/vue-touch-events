@@ -47,14 +47,14 @@ var vueTouchEvents = {
 
         function touchStartEvent(event) {
             var $this = this.$$touchObj
-			if(event.type.indexOf("mouse") === -1){
+            if(event.type.indexOf("mouse") === -1){
                 $this.supportTouch = true;
-			}
+            }
 
-			if($this.supportTouch && event.type.indexOf("mouse") !== -1){
-				// don't click when we're touch instead of clicking
-				return;
-			}
+            if($this.supportTouch && event.type.indexOf("mouse") !== -1){
+                // don't click when we're touch instead of clicking
+                return;
+            }
 
             if ($this.touchStarted) {
                 return
@@ -81,10 +81,10 @@ var vueTouchEvents = {
         function touchMoveEvent(event) {
             var $this = this.$$touchObj
 
-			if($this.supportTouch && event.type.indexOf("mouse") !== -1){
-				// don't move when we're touch instead of clicking
-				return;
-			}
+            if($this.supportTouch && event.type.indexOf("mouse") !== -1){
+                // don't move when we're touch instead of clicking
+                return;
+            }
 
             $this.currentX = touchX(event)
             $this.currentY = touchY(event)
@@ -107,7 +107,7 @@ var vueTouchEvents = {
             }
 
 			if($this.touchMoved){
-				triggerEvent(event, this, 'moving')
+                triggerEvent(event, this, 'moving')
 			}
         }
 
@@ -123,10 +123,10 @@ var vueTouchEvents = {
         function touchEndEvent(event) {
             var $this = this.$$touchObj
 
-			if($this.supportTouch && event.type.indexOf("mouse") !== -1){
-				// don't touchend when we're touch instead of clicking
-				return;
-			}
+            if($this.supportTouch && event.type.indexOf("mouse") !== -1){
+                // don't touchend when we're touch instead of clicking
+                return;
+            }
 
             $this.touchStarted = false
 
