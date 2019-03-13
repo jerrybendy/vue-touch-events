@@ -132,6 +132,9 @@ var vueTouchEvents = {
 
             removeTouchClass(this)
 
+            // Fix #33, Trigger `end` event when touch stopped
+            triggerEvent(event, this, 'end')
+
             if (!$this.touchMoved) {
                 // detect if this is a longTap event or not
                 if ($this.callbacks.longtap && event.timeStamp - $this.touchStartTime > options.longTapTimeInterval) {
@@ -142,7 +145,6 @@ var vueTouchEvents = {
                     // emit tap event
                     triggerEvent(event, this, 'tap')
                 }
-                triggerEvent(event, this, 'end')
 
             } else if (!$this.swipeOutBounded) {
                 var swipeOutBounded = options.swipeTolerance, direction
