@@ -3,6 +3,16 @@ Enable tap / swipe events for VueJS 2.x
 
 > Note: This is for **Vue 2.x** only.
 
+Supports:
+
+* `tap` for tap the screen or click the mouse
+* `longtap` for long tap
+* `swipe` for swipe your finger or mouse in a direction (left/top/right/bottom)
+* `start` for start tap or mouse down
+* `end` for tap end or mouse up
+* `moving` for moving finger or mouse
+
+
 ## Install
 
 To install with npm or yarn, use
@@ -59,14 +69,13 @@ In your `.vue` file:
     v-touch:swipe.right="swipeRightHandler">Mix Multiple Events</span>
 ```
 
-
+    
 ## APIs
 
 ### Global config (optional)
 
 ```js
 Vue.use(Vue2TouchEvents, {
-    disableClick: false,
     touchClass: '',
     tapTolerance: 10,
     swipeTolerance: 30,
@@ -74,16 +83,7 @@ Vue.use(Vue2TouchEvents, {
 })
 ```
 
-
-* `disableClick` default `false`. Use touch event only, will not trigger click event.
-
-    You should keep this value default if you use your website on both mobile and PC.
-
-    If your website uses on mobile only, it's a good choice to set this value to `true` to get a better user experience, and it can resolve some touch pass-through issue.
-
 * `touchClass`  default: `''`. Add an extra CSS class when touch start, and remove it when touch end.
-
-    If `disableClick` is `false`, it will bind `mouseenter` and `mouseleave` event on your components too. So you can use it instead of `:hover` and `:active`.
 
     This is a global config, and you can use `v-touch-class` directive to overwrite this setting in a single component.
 
@@ -91,14 +91,12 @@ Vue.use(Vue2TouchEvents, {
 * `swipeTolerance` default `30`. The tolerance to ensure whether the swipe event effective or not.
 * `longTapTimeInterval` default `400` in millsecond. The minimum time interval to detect whether long tap event effective or not.
 
-If you don't want bind `click` event at same time, just set `disableClick` to `true`.
-
 ### Directives
 
 #### v-touch
 Bind the `v-touch` directive to components which you want to enable touch events.
 
-`v-touch` accepts an argument to tell it which event you want to bind. `tap`, `longtap` and `swipe` are available.
+`v-touch` accepts an argument to tell it which event you want to bind.
 
 ```html
 <span v-touch:tap="tapHandler">Tap</span>
