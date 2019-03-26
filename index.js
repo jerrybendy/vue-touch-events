@@ -46,14 +46,16 @@ var vueTouchEvents = {
 
 
         function touchStartEvent(event) {
-            var $this = this.$$touchObj
-            if(event.type.indexOf("mouse") === -1){
-                $this.supportTouch = true;
+            var $this = this.$$touchObj,
+                isTouchEvent = event.type.indexOf("touch") >= 0,
+                isMouseEvent = event.type.indexOf("mouse") >= 0
+
+            if (isTouchEvent) {
+                $this.lastTouchStartTime = event.timeStamp
             }
 
-            if($this.supportTouch && event.type.indexOf("mouse") !== -1){
-                // don't click when we're touch instead of clicking
-                return;
+            if (isMouseEvent && $this.lastTouchStartTime && event.timeStamp - $this.lastTouchStartTime < 350) {
+                return
             }
 
             if ($this.touchStarted) {
@@ -80,11 +82,6 @@ var vueTouchEvents = {
 
         function touchMoveEvent(event) {
             var $this = this.$$touchObj
-
-            if($this.supportTouch && event.type.indexOf("mouse") !== -1){
-                // don't move when we're touch instead of clicking
-                return;
-            }
 
             $this.currentX = touchX(event)
             $this.currentY = touchY(event)
@@ -121,11 +118,16 @@ var vueTouchEvents = {
         }
 
         function touchEndEvent(event) {
-            var $this = this.$$touchObj
+            var $this = this.$$touchObj,
+                isTouchEvent = event.type.indexOf("touch") >= 0,
+                isMouseEvent = event.type.indexOf("mouse") >= 0
 
-            if($this.supportTouch && event.type.indexOf("mouse") !== -1){
-                // don't touchend when we're touch instead of clicking
-                return;
+            if (isTouchEvent) {
+                $this.lastTouchEndTime = event.timeStamp
+            }
+
+            if (isMouseEvent && $this.lastTouchEndTime && event.timeStamp - $this.lastTouchEndTime < 350) {
+                return
             }
 
             $this.touchStarted = false
@@ -224,8 +226,6 @@ var vueTouchEvents = {
             bind: function ($el, binding) {
 
                 $el.$$touchObj = $el.$$touchObj || {
-                        // will change to true when `touchstart` event first trigger
-                        supportTouch: false,
                         // an object contains all callbacks registered,
                         // key is event name, value is an array
                         callbacks: {},
@@ -269,14 +269,11 @@ var vueTouchEvents = {
                 $el.addEventListener('touchcancel', touchCancelEvent)
                 $el.addEventListener('touchend', touchEndEvent)
 
-                if (!options.disableClick) {
-                    //$el.addEventListener('click', clickEvent)
-                    $el.addEventListener('mousedown', touchStartEvent)
-                    $el.addEventListener('mousemove', touchMoveEvent)
-                    $el.addEventListener('mouseup', touchEndEvent)
-                    $el.addEventListener('mouseenter', mouseEnterEvent)
-                    $el.addEventListener('mouseleave', mouseLeaveEvent)
-                }
+                $el.addEventListener('mousedown', touchStartEvent)
+                $el.addEventListener('mousemove', touchMoveEvent)
+                $el.addEventListener('mouseup', touchEndEvent)
+                $el.addEventListener('mouseenter', mouseEnterEvent)
+                $el.addEventListener('mouseleave', mouseLeaveEvent)
 
                 // set bind mark to true
                 $el.$$touchObj.hasBindTouchEvents = true
@@ -288,14 +285,11 @@ var vueTouchEvents = {
                 $el.removeEventListener('touchcancel', touchCancelEvent)
                 $el.removeEventListener('touchend', touchEndEvent)
 
-                if (!options.disableClick) {
-                    //$el.removeEventListener('click', clickEvent)
-                    $el.removeEventListener('mousedown', touchStartEvent)
-                    $el.removeEventListener('mousemove', touchMoveEvent)
-                    $el.removeEventListener('mouseup', touchEndEvent)
-                    $el.removeEventListener('mouseenter', mouseEnterEvent)
-                    $el.removeEventListener('mouseleave', mouseLeaveEvent)
-                }
+                $el.removeEventListener('mousedown', touchStartEvent)
+                $el.removeEventListener('mousemove', touchMoveEvent)
+                $el.removeEventListener('mouseup', touchEndEvent)
+                $el.removeEventListener('mouseenter', mouseEnterEvent)
+                $el.removeEventListener('mouseleave', mouseLeaveEvent)
 
                 // remove vars
                 delete $el.$$touchObj
