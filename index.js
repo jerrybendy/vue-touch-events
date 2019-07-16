@@ -37,6 +37,7 @@ var vueTouchEvents = {
 
         // Set default options
         options = Object.assign({}, {
+            directiveName: 'touch',
             tapTolerance: 10,
             swipeTolerance: 30,
             longTapTimeInterval: 400,
@@ -221,7 +222,7 @@ var vueTouchEvents = {
             className && $el.classList.remove(className)
         }
 
-        Vue.directive('touch', {
+        Vue.directive(options.directiveName, {
             bind: function ($el, binding) {
 
                 $el.$$touchObj = $el.$$touchObj || {
