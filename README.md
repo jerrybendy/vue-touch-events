@@ -128,8 +128,6 @@ For example:
 
 Now, when you start to touch, it will add an extra `active` class automatically. And remove it when touch end.
 
-If your setting of `disableClick` is `false` (it's default), it will bind `mouseenter` and `mouseleave` events, too.
-
 So that you can use this feature to instead of `:active` and `:hover` pseudo class, for a better user experience.
 
 ```css

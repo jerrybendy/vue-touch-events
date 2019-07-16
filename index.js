@@ -37,7 +37,6 @@ var vueTouchEvents = {
 
         // Set default options
         options = Object.assign({}, {
-            disableClick: false,
             tapTolerance: 10,
             swipeTolerance: 30,
             longTapTimeInterval: 400,
