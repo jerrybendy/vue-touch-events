@@ -269,11 +269,13 @@ var vueTouchEvents = {
                 $el.addEventListener('touchcancel', touchCancelEvent)
                 $el.addEventListener('touchend', touchEndEvent)
 
-                $el.addEventListener('mousedown', touchStartEvent)
-                $el.addEventListener('mousemove', touchMoveEvent)
-                $el.addEventListener('mouseup', touchEndEvent)
-                $el.addEventListener('mouseenter', mouseEnterEvent)
-                $el.addEventListener('mouseleave', mouseLeaveEvent)
+                if (!options.disableClick) {
+                    $el.addEventListener('mousedown', touchStartEvent)
+                    $el.addEventListener('mousemove', touchMoveEvent)
+                    $el.addEventListener('mouseup', touchEndEvent)
+                    $el.addEventListener('mouseenter', mouseEnterEvent)
+                    $el.addEventListener('mouseleave', mouseLeaveEvent)
+                }
 
                 // set bind mark to true
                 $el.$$touchObj.hasBindTouchEvents = true
@@ -285,11 +287,13 @@ var vueTouchEvents = {
                 $el.removeEventListener('touchcancel', touchCancelEvent)
                 $el.removeEventListener('touchend', touchEndEvent)
 
-                $el.removeEventListener('mousedown', touchStartEvent)
-                $el.removeEventListener('mousemove', touchMoveEvent)
-                $el.removeEventListener('mouseup', touchEndEvent)
-                $el.removeEventListener('mouseenter', mouseEnterEvent)
-                $el.removeEventListener('mouseleave', mouseLeaveEvent)
+                if (!options.disableClick) {
+                    $el.removeEventListener('mousedown', touchStartEvent)
+                    $el.removeEventListener('mousemove', touchMoveEvent)
+                    $el.removeEventListener('mouseup', touchEndEvent)
+                    $el.removeEventListener('mouseenter', mouseEnterEvent)
+                    $el.removeEventListener('mouseleave', mouseLeaveEvent)
+                }
 
                 // remove vars
                 delete $el.$$touchObj

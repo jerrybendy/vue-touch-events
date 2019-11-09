@@ -76,12 +76,19 @@ In your `.vue` file:
 
 ```js
 Vue.use(Vue2TouchEvents, {
+    disableClick: false,
     touchClass: '',
     tapTolerance: 10,
     swipeTolerance: 30,
     longTapTimeInterval: 400
 })
 ```
+
+* `disableClick` default `false`. Use touch event only, will not trigger click event.
+
+    You should keep this value default if you use your website on both mobile and PC.
+
+    If your website uses on mobile only, it's a good choice to set this value to `true` to get a better user experience, and it can resolve some touch pass-through issue.
 
 * `touchClass`  default: `''`. Add an extra CSS class when touch start, and remove it when touch end.
 
