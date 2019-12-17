@@ -38,9 +38,10 @@ var vueTouchEvents = {
         // Set default options
         options = Object.assign({}, {
             disableClick: false,
-            tapTolerance: 10,
-            swipeTolerance: 30,
-            longTapTimeInterval: 400,
+            tapTolerance: 10,  // px
+            swipeTolerance: 30,  // px
+            touchHoldTolerance: 400,  // ms
+            longTapTimeInterval: 400,  // ms
             touchClass: ''
         }, options || {})
 
@@ -48,7 +49,8 @@ var vueTouchEvents = {
         function touchStartEvent(event) {
             var $this = this.$$touchObj,
                 isTouchEvent = event.type.indexOf("touch") >= 0,
-                isMouseEvent = event.type.indexOf("mouse") >= 0
+                isMouseEvent = event.type.indexOf("mouse") >= 0,
+                $el = this
 
             if (isTouchEvent) {
                 $this.lastTouchStartTime = event.timeStamp
@@ -77,6 +79,11 @@ var vueTouchEvents = {
 
             $this.touchStartTime = event.timeStamp
 
+            // Trigger touchhold event after `touchHoldTolerance`ms
+            $this.touchHoldTimer = setTimeout(function() {
+                triggerEvent(event, $el, 'touchhold')
+            }, options.touchHoldTolerance)
+
             triggerEvent(event, this, 'start')
         }
 
@@ -93,6 +100,7 @@ var vueTouchEvents = {
                     Math.abs($this.startY - $this.currentY) > tapTolerance
 
                 if($this.touchMoved){
+                    cancelTouchHoldTimer($this)
                     triggerEvent(event, this, 'moved')
                 }
 
@@ -111,6 +119,7 @@ var vueTouchEvents = {
         function touchCancelEvent() {
             var $this = this.$$touchObj
 
+            cancelTouchHoldTimer($this)
             removeTouchClass(this)
 
             $this.touchStarted = $this.touchMoved = false
@@ -125,6 +134,8 @@ var vueTouchEvents = {
             if (isTouchEvent) {
                 $this.lastTouchEndTime = event.timeStamp
             }
+
+            cancelTouchHoldTimer($this)
 
             if (isMouseEvent && $this.lastTouchEndTime && event.timeStamp - $this.lastTouchEndTime < 350) {
                 return
@@ -220,6 +231,13 @@ var vueTouchEvents = {
         function removeTouchClass($el) {
             var className = $el.$$touchClass || options.touchClass
             className && $el.classList.remove(className)
+        }
+
+        function cancelTouchHoldTimer($this) {
+            if ($this.touchHoldTimer) {
+                clearTimeout($this.touchHoldTimer)
+                $this.touchHoldTimer = null
+            }
         }
 
         Vue.directive('touch', {
