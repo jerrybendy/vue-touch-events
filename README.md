@@ -1,16 +1,15 @@
 # vue-touch-events  [![](https://img.shields.io/npm/v/vue2-touch-events.svg)](https://www.npmjs.com/package/vue2-touch-events)
-Enable tap / swipe events for VueJS 2.x
+Enable tap / swipe / touch hold events for vue.js 2.x
 
-> Note: This is for **Vue 2.x** only.
+> Note: This is for **vue.js 2.x** only.
 
-Supports:
+Features:
 
-* `tap` for tap the screen or click the mouse
-* `longtap` for long tap
-* `swipe` for swipe your finger or mouse in a direction (left/top/right/bottom)
-* `start` for start tap or mouse down
-* `end` for tap end or mouse up
-* `moving` for moving finger or mouse
+* Common touch events, such as `tap`, `swipe`, `touchhold` ([more](#Bindings))
+* All events support mouse and touch screen at same time
+* Optimized touch effects with `touchClass` option and `v-touch-class` directive
+* Binding multiple touch events on one DOM element
+* Customizable events with native-likely events handler
 
 
 ## Install
@@ -59,6 +58,8 @@ In your `.vue` file:
 <span v-touch:moved="movedHandler">Triggered once when starting to move and tapTolerance is exceeded</span>
 <span v-touch:moving="movingHandler">Continuously triggering Event</span>
 
+<!-- touch and hold -->
+<span v-touch:touchhold="touchHoldHandler">Touch and hold on the screen for a while</span>
 
 <!-- you can even mix multiple events -->
 <span v-touch:tap="tapHandler"
@@ -79,6 +80,7 @@ Vue.use(Vue2TouchEvents, {
     disableClick: false,
     touchClass: '',
     tapTolerance: 10,
+    touchHoldTolerance: 400,
     swipeTolerance: 30,
     longTapTimeInterval: 400
 })
@@ -95,8 +97,9 @@ Vue.use(Vue2TouchEvents, {
     This is a global config, and you can use `v-touch-class` directive to overwrite this setting in a single component.
 
 * `tapTolerance` default `10`. The tolerance to ensure whether the tap event effective or not.
+* `touchHoldTolerance` default `400` in millisecond. The timeout for a `touchhold` event.
 * `swipeTolerance` default `30`. The tolerance to ensure whether the swipe event effective or not.
-* `longTapTimeInterval` default `400` in millsecond. The minimum time interval to detect whether long tap event effective or not.
+* `longTapTimeInterval` default `400` in millisecond. The minimum time interval to detect whether long tap event effective or not.
 
 ### Directives
 
@@ -150,6 +153,28 @@ span.active {
   background: green;
 }
 ```
+
+### Bindings
+#### v-touch:tap / v-touch
+`tap` is the default event type of `v-touch`. It will be trigger when tap on the screen or click the mouse.
+
+#### v-touch:swipe
+`swipe` means touch on the screen and move in a direction. The direction could be `top`,`bottom`,`left` or `right`. 
+
+#### v-touch:longtap
+> `longtap` will be deprecated in next major version. Please use `touchhold` insead. If you still want to use this feature, please let me know.
+
+`longtap` means touch on the screen and hold for a while. It will be triggered when you release your finger. (It's not normal when we use touch devices, so it's a good choice to use `touchhold` instaed)
+
+#### v-touch:touchhold `(v2.1.0)`
+`touchhold` will be triggered when touch on the screen and hold for `touchHoldTolerance` milliseconds. This will be triggered before your finger released, as what native APP does.
+
+#### v-touch:start / v-touch:end / v-touch:moving
+* `start` is same as `touchstart` or `mousedown`.
+* `end` is same as `touchend` or `mouseup`.
+* `moving` is same as `touchmovoe` or `mousemove`.
+
+These three events are like native DOM events. You can use these events to custom behaviors which this library doesn't support yet.
 
 ### Modifiers
 
