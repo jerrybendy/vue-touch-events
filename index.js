@@ -94,7 +94,7 @@ var vueTouchEvents = {
             $this.currentY = touchY(event);
 
             if (!$this.touchMoved) {
-                var tapTolerance = options.tapTolerance;
+                var tapTolerance = this.$$tapTolerance || options.tapTolerance;
 
                 $this.touchMoved = Math.abs($this.startX - $this.currentX) > tapTolerance ||
                     Math.abs($this.startY - $this.currentY) > tapTolerance;
@@ -325,6 +325,15 @@ var vueTouchEvents = {
             },
             unbind: function ($el) {
                 delete $el.$$touchClass;
+            }
+        });
+
+        Vue.directive('tap-tolerance', {
+            bind: function ($el, binding) {
+                $el.$$tapTolerance = binding.value;
+            },
+            unbind: function ($el) {
+                delete $el.$$tapTolerance;
             }
         });
     }
