@@ -97,6 +97,9 @@ Vue.use(Vue2TouchEvents, {
     This is a global config, and you can use `v-touch-class` directive to overwrite this setting in a single component.
 
 * `tapTolerance` default `10`. The tolerance to ensure whether the tap event effective or not.
+
+    This is a global config, and you can use `v-tap-tolerance` directive to overwrite this setting in a single component.
+
 * `touchHoldTolerance` default `400` in millisecond. The timeout for a `touchhold` event.
 * `swipeTolerance` default `30`. The tolerance to ensure whether the swipe event effective or not.
 * `longTapTimeInterval` default `400` in millisecond. The minimum time interval to detect whether long tap event effective or not.
