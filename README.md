@@ -10,6 +10,7 @@ Features:
 * Optimized touch effects with `touchClass` option and `v-touch-class` directive
 * Binding multiple touch events on one DOM element
 * Customizable events with native-likely events handler
+* Allow splitting configurations for different DOM elements by `v-touch-options` directive
 
 
 ## Install
@@ -68,12 +69,22 @@ In your `.vue` file:
     v-touch:start="startHandler" 
     v-touch:end="endHandler"
     v-touch:swipe.right="swipeRightHandler">Mix Multiple Events</span>
+
+<!-- using different options for specified element -->
+<span v-touch:tap="tapHandler"
+    v-touch-options="{touchClass: 'active', swipeTolerance: 80, touchHoldTolerance: 300}">Different options</span>
+
+<!-- customize touch effects by CSS class -->
+<span v-touch:tap="tapHandler" v-touch-class="active">Customize touch class</span>
+<!-- or -->
+<span v-touch:tap="tapHandler" v-touch-options="{touchClass: 'active'}">Customize touch class</span>
+
 ```
 
     
 ## APIs
 
-### Global config (optional)
+### Global configuration (optional)
 
 ```js
 Vue.use(Vue2TouchEvents, {
@@ -125,6 +136,10 @@ export default {
     }
 }
 ```
+
+### v-touch-options
+
+`v-touch-options` directive allows you set a different configuration for a specified component. It will override global configurations.
 
 #### v-touch-class
 
