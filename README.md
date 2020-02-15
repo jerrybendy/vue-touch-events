@@ -137,7 +137,7 @@ export default {
 }
 ```
 
-### v-touch-options
+### v-touch-options `(v2.2.0)`
 
 `v-touch-options` directive allows you set a different configuration for a specified component. It will override global configurations.
 
