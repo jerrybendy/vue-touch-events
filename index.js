@@ -314,7 +314,7 @@ var vueTouchEvents = {
                 $el.removeEventListener('touchcancel', touchCancelEvent);
                 $el.removeEventListener('touchend', touchEndEvent);
 
-                if (!$el.$$touchObj.options.disableClick) {
+                if ($el.$$touchObj && !$el.$$touchObj.options.disableClick) {
                     $el.removeEventListener('mousedown', touchStartEvent);
                     $el.removeEventListener('mousemove', touchMoveEvent);
                     $el.removeEventListener('mouseup', touchEndEvent);
