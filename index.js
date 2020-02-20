@@ -5,14 +5,14 @@
  */
 
 function touchX(event) {
-    if(event.type.indexOf('mouse') !== -1){
+    if(event.type.startsWith('mouse')){
         return event.clientX;
     }
     return event.touches[0].clientX;
 }
 
 function touchY(event) {
-    if(event.type.indexOf('mouse') !== -1){
+    if(event.type.startsWith('mouse')){
         return event.clientY;
     }
     return event.touches[0].clientY;
@@ -46,8 +46,8 @@ var vueTouchEvents = {
 
         function touchStartEvent(event) {
             var $this = this.$$touchObj,
-                isTouchEvent = event.type.indexOf('touch') >= 0,
-                isMouseEvent = event.type.indexOf('mouse') >= 0,
+                isTouchEvent = event.type.startsWith('touch'),
+                isMouseEvent = event.type.startsWith('mouse'),
                 $el = this;
 
             if (isTouchEvent) {
@@ -126,8 +126,8 @@ var vueTouchEvents = {
 
         function touchEndEvent(event) {
             var $this = this.$$touchObj,
-                isTouchEvent = event.type.indexOf('touch') >= 0,
-                isMouseEvent = event.type.indexOf('mouse') >= 0;
+                isTouchEvent = event.type.startsWith('touch'),
+                isMouseEvent = event.type.startsWith('mouse');
 
             if (isTouchEvent) {
                 $this.lastTouchEndTime = event.timeStamp;
@@ -268,7 +268,7 @@ var vueTouchEvents = {
                         var _m = binding.modifiers;
                         if (_m.left || _m.right || _m.top || _m.bottom) {
                             for (var i in binding.modifiers) {
-                                if (['left', 'right', 'top', 'bottom'].indexOf(i) >= 0) {
+                                if (['left', 'right', 'top', 'bottom'].includes(i)) {
                                     var _e = 'swipe.' + i;
                                     $this.callbacks[_e] = $this.callbacks[_e] || [];
                                     $this.callbacks[_e].push(binding);
