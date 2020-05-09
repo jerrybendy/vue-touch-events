@@ -159,22 +159,24 @@ var vueTouchEvents = {
 
             } else if (!$this.swipeOutBounded) {
                 var swipeOutBounded = $this.options.swipeTolerance,
-                    direction;
+                    direction,
+                    distanceY = Math.abs($this.startY - $this.currentY),
+                    distanceX = Math.abs($this.startX - $this.currentX);
 
-                if (Math.abs($this.startX - $this.currentX) < swipeOutBounded) {
-                    direction = $this.startY > $this.currentY ? 'top' : 'bottom';
+                if (distanceY > swipeOutBounded || distanceX > swipeOutBounded) {
+                    if (distanceY > swipeOutBounded) {
+                        direction = $this.startY > $this.currentY ? 'top' : 'bottom';
+                    } else {
+                        direction = $this.startX > $this.currentX ? 'left' : 'right';
+                    }
 
-                } else {
-                    direction = $this.startX > $this.currentX ? 'left' : 'right';
-                }
-
-                // Only emit the specified event when it has modifiers
-                if ($this.callbacks['swipe.' + direction]) {
-                    triggerEvent(event, this, 'swipe.' + direction, direction);
-
-                } else {
-                    // Emit a common event when it has no any modifier
-                    triggerEvent(event, this, 'swipe', direction);
+                    // Only emit the specified event when it has modifiers
+                    if ($this.callbacks['swipe.' + direction]) {
+                        triggerEvent(event, this, 'swipe.' + direction, direction);
+                    } else {
+                        // Emit a common event when it has no any modifier
+                        triggerEvent(event, this, 'swipe', direction);
+                    }
                 }
             }
         }
