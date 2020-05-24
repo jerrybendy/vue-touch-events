@@ -255,9 +255,26 @@ var vueTouchEvents = {
             $el.$$touchObj = touchObj;
             return $el.$$touchObj;
         }
+        function removePreviousEventListeners($el) {
+                $el.removeEventListener('touchstart', touchStartEvent);
+                $el.removeEventListener('touchmove', touchMoveEvent);
+                $el.removeEventListener('touchcancel', touchCancelEvent);
+                $el.removeEventListener('touchend', touchEndEvent);
 
+                if ($el.$$touchObj && !$el.$$touchObj.options.disableClick) {
+                    $el.removeEventListener('mousedown', touchStartEvent);
+                    $el.removeEventListener('mousemove', touchMoveEvent);
+                    $el.removeEventListener('mouseup', touchEndEvent);
+                    $el.removeEventListener('mouseenter', mouseEnterEvent);
+                    $el.removeEventListener('mouseleave', mouseLeaveEvent);
+                }
+
+                // remove vars
+                delete $el.$$touchObj;
+        };
         Vue.directive('touch', {
-            bind: function ($el, binding) {
+            componentUpdated: function ($el) {
+                removePreviousEventListeners($el, binding);
                 // build a touch configuration object
                 var $this = buildTouchObj($el);
 
@@ -309,21 +326,7 @@ var vueTouchEvents = {
             },
 
             unbind: function ($el) {
-                $el.removeEventListener('touchstart', touchStartEvent);
-                $el.removeEventListener('touchmove', touchMoveEvent);
-                $el.removeEventListener('touchcancel', touchCancelEvent);
-                $el.removeEventListener('touchend', touchEndEvent);
-
-                if ($el.$$touchObj && !$el.$$touchObj.options.disableClick) {
-                    $el.removeEventListener('mousedown', touchStartEvent);
-                    $el.removeEventListener('mousemove', touchMoveEvent);
-                    $el.removeEventListener('mouseup', touchEndEvent);
-                    $el.removeEventListener('mouseenter', mouseEnterEvent);
-                    $el.removeEventListener('mouseleave', mouseLeaveEvent);
-                }
-
-                // remove vars
-                delete $el.$$touchObj;
+                removePreviousEventListeners($el);
             }
         });
 
