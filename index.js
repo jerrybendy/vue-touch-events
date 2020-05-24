@@ -273,8 +273,8 @@ var vueTouchEvents = {
                 delete $el.$$touchObj;
         };
         Vue.directive('touch', {
-            componentUpdated: function ($el) {
-                removePreviousEventListeners($el, binding);
+            componentUpdated: function ($el, binding) {
+                removePreviousEventListeners($el);
                 // build a touch configuration object
                 var $this = buildTouchObj($el);
 
