@@ -1,4 +1,5 @@
 # vue-touch-events  [![](https://img.shields.io/npm/v/vue2-touch-events.svg)](https://www.npmjs.com/package/vue2-touch-events)
+
 Enable tap / swipe / touch hold events for vue.js 2.x
 
 > Note: This is for **vue.js 2.x** only.
@@ -11,7 +12,6 @@ Features:
 * Binding multiple touch events on one DOM element
 * Customizable events with native-likely events handler
 * Allow splitting configurations for different DOM elements by `v-touch-options` directive
-
 
 ## Install
 
@@ -78,10 +78,15 @@ In your `.vue` file:
 <span v-touch:tap="tapHandler" v-touch-class="active">Customize touch class</span>
 <!-- or -->
 <span v-touch:tap="tapHandler" v-touch-options="{touchClass: 'active'}">Customize touch class</span>
-
 ```
 
-    
+If you use vue and this plugin in UMD way (in a script tag) , this plugin is auto used. So it's not necessary to wirte `Vue.use(Vue2TouchEvents)`.
+
+```html
+<script src="path/to/vue.js"></script>
+<script src="path/to/vue-touch-events.js"></script>
+```
+
 ## APIs
 
 ### Global configuration (optional)
@@ -98,23 +103,27 @@ Vue.use(Vue2TouchEvents, {
 ```
 
 * `disableClick` default `false`. Use touch event only, will not trigger click event.
-
+  
     You should keep this value default if you use your website on both mobile and PC.
-
+  
     If your website uses on mobile only, it's a good choice to set this value to `true` to get a better user experience, and it can resolve some touch pass-through issue.
 
 * `touchClass`  default: `''`. Add an extra CSS class when touch start, and remove it when touch end.
-
+  
     This is a global config, and you can use `v-touch-class` directive to overwrite this setting in a single component.
 
 * `tapTolerance` default `10`. The tolerance to ensure whether the tap event effective or not.
+
 * `touchHoldTolerance` default `400` in millisecond. The timeout for a `touchhold` event.
+
 * `swipeTolerance` default `30`. The tolerance to ensure whether the swipe event effective or not.
+
 * `longTapTimeInterval` default `400` in millisecond. The minimum time interval to detect whether long tap event effective or not.
 
 ### Directives
 
 #### v-touch
+
 Bind the `v-touch` directive to components which you want to enable touch events.
 
 `v-touch` accepts an argument to tell it which event you want to bind.
@@ -170,21 +179,27 @@ span.active {
 ```
 
 ### Bindings
+
 #### v-touch:tap / v-touch
+
 `tap` is the default event type of `v-touch`. It will be trigger when tap on the screen or click the mouse.
 
 #### v-touch:swipe
+
 `swipe` means touch on the screen and move in a direction. The direction could be `top`,`bottom`,`left` or `right`. 
 
 #### v-touch:longtap
+
 > `longtap` will be deprecated in next major version. Please use `touchhold` insead. If you still want to use this feature, please let me know.
 
 `longtap` means touch on the screen and hold for a while. It will be triggered when you release your finger. (It's not normal when we use touch devices, so it's a good choice to use `touchhold` instaed)
 
 #### v-touch:touchhold `(v2.1.0)`
+
 `touchhold` will be triggered when touch on the screen and hold for `touchHoldTolerance` milliseconds. This will be triggered before your finger released, as what native APP does.
 
 #### v-touch:start / v-touch:end / v-touch:moving
+
 * `start` is same as `touchstart` or `mousedown`.
 * `end` is same as `touchend` or `mouseup`.
 * `moving` is same as `touchmovoe` or `mousemove`.
@@ -194,20 +209,25 @@ These three events are like native DOM events. You can use these events to custo
 ### Modifiers
 
 #### left, right, top, bottom
+
 This four modifiers are for `v-touch:swipe` only, to specify which direction you want to bind events to.
 
 #### self
+
 Same as `v-on:click.self`, only trigger events when the event target is the `currentTarget`.
 
 #### stop
+
 Same as `v-on:click.stop`, stops event propagation.
 
 #### prevent
+
 Same as `v-on:click.prevent`, prevents default event handler from firing.
 
 ## Others
 
 ### How to add extra parameters
+
 As mentioned by [#3](https://github.com/jerrybendy/vue-touch-events/issues/3), if you want to add extra
 parameters for `v-touch`, you can't do that like `v-on`. The hack is that you can let your method returns
 a `function` and handle the extra parameters in the returned function.
@@ -233,8 +253,6 @@ export default {
 
 [Look at here](https://github.com/jerrybendy/vue-touch-events/releases)
 
-
 ## LICENSE
 
 MIT License
-
