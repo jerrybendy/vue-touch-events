@@ -260,7 +260,8 @@ var vueTouchEvents = {
             bind: function ($el, binding) {
                 // build a touch configuration object
                 var $this = buildTouchObj($el);
-
+                // declare passive option for the event listener. Defaults to { passive: true } if supported
+                var passiveOpt = isPassiveSupported ? { passive: true } : false;
                 // register callback
                 var eventType = binding.arg || 'tap';
                 switch (eventType) {
@@ -279,6 +280,23 @@ var vueTouchEvents = {
                             $this.callbacks.swipe.push(binding);
                         }
                         break;
+                    
+                    case 'start':
+                        var _m = binding.modifiers;
+                        if (_m.disablePassive) {
+                            // change the passive option for the moving event if disablePassive modifier exists
+                            passiveOpt = false;
+                        }
+                        break;
+    
+
+                    case 'moving':
+                        var _m = binding.modifiers;
+                        if (_m.disablePassive) {
+                            // change the passive option for the moving event if disablePassive modifier exists
+                            passiveOpt = false;
+                        }
+                        break;
 
                     default:
                         $this.callbacks[eventType] = $this.callbacks[eventType] || [];
@@ -290,7 +308,6 @@ var vueTouchEvents = {
                     return;
                 }
 
-                var passiveOpt = isPassiveSupported ? { passive: true } : false;
                 $el.addEventListener('touchstart', touchStartEvent, passiveOpt);
                 $el.addEventListener('touchmove', touchMoveEvent, passiveOpt);
                 $el.addEventListener('touchcancel', touchCancelEvent);
