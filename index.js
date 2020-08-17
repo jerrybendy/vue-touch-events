@@ -282,17 +282,8 @@ var vueTouchEvents = {
                         break;
                     
                     case 'start':
-                        var _m = binding.modifiers;
-                        if (_m.disablePassive) {
-                            // change the passive option for the moving event if disablePassive modifier exists
-                            passiveOpt = false;
-                        }
-                        break;
-    
-
                     case 'moving':
-                        var _m = binding.modifiers;
-                        if (_m.disablePassive) {
+                        if (binding.modifiers.disablePassive) {
                             // change the passive option for the moving event if disablePassive modifier exists
                             passiveOpt = false;
                         }

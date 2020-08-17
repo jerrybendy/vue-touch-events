@@ -224,6 +224,10 @@ Same as `v-on:click.stop`, stops event propagation.
 
 Same as `v-on:click.prevent`, prevents default event handler from firing.
 
+#### disablePassive `(v2.3.0)`
+
+`{passive: true}` is set for touch event listeners if your browser supports `passive`. This is good for user experience. If this is not what you want, you can use `disablePassive` modifier to prevent this behavior.
+
 ## Others
 
 ### How to add extra parameters
