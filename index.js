@@ -280,6 +280,15 @@ var vueTouchEvents = {
                             $this.callbacks.swipe.push(binding);
                         }
                         break;
+                    
+                    case 'start':
+                        var _m = binding.modifiers;
+                        if (_m.disablePassive) {
+                            // change the passive option for the moving event if disablePassive modifier exists
+                            passiveOpt = false;
+                        }
+                        break;
+    
 
                     case 'moving':
                         var _m = binding.modifiers;
@@ -287,6 +296,7 @@ var vueTouchEvents = {
                             // change the passive option for the moving event if disablePassive modifier exists
                             passiveOpt = false;
                         }
+                        break;
 
                     default:
                         $this.callbacks[eventType] = $this.callbacks[eventType] || [];
