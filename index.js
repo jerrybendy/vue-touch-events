@@ -287,8 +287,6 @@ var vueTouchEvents = {
                             // change the passive option for the moving event if disablePassive modifier exists
                             passiveOpt = false;
                         }
-                        break;
-
                     default:
                         $this.callbacks[eventType] = $this.callbacks[eventType] || [];
                         $this.callbacks[eventType].push(binding);
