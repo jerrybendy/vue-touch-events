@@ -149,7 +149,9 @@ var vueTouchEvents = {
             if (!$this.touchMoved) {
                 // detect if this is a longTap event or not
                 if ($this.callbacks.longtap && event.timeStamp - $this.touchStartTime > $this.options.longTapTimeInterval) {
-                    event.preventDefault();
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
                     triggerEvent(event, this, 'longtap');
 
                 } else {
