@@ -135,13 +135,13 @@ var vueTouchEvents = {
 
             cancelTouchHoldTimer($this);
 
-            if (isMouseEvent && $this.lastTouchEndTime && event.timeStamp - $this.lastTouchEndTime < 350) {
-                return;
-            }
-
             $this.touchStarted = false;
 
             removeTouchClass(this);
+
+            if (isMouseEvent && $this.lastTouchEndTime && event.timeStamp - $this.lastTouchEndTime < 350) {
+                return;
+            }
 
             // Fix #33, Trigger `end` event when touch stopped
             triggerEvent(event, this, 'end');
