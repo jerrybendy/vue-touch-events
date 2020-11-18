@@ -79,6 +79,7 @@ var vueTouchEvents = {
 
             // Trigger touchhold event after `touchHoldTolerance`ms
             $this.touchHoldTimer = setTimeout(function() {
+                $this.touchHoldTimer = null;
                 triggerEvent(event, $el, 'touchhold');
             }, $this.options.touchHoldTolerance);
 
@@ -133,6 +134,7 @@ var vueTouchEvents = {
                 $this.lastTouchEndTime = event.timeStamp;
             }
 
+            var touchholdEnd = isTouchEvent && !$this.touchHoldTimer;
             cancelTouchHoldTimer($this);
 
             $this.touchStarted = false;
@@ -154,6 +156,11 @@ var vueTouchEvents = {
                     }
                     triggerEvent(event, this, 'longtap');
 
+                } else if ($this.callbacks.touchhold && touchholdEnd) {
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
+                    return;
                 } else {
                     // emit tap event
                     triggerEvent(event, this, 'tap');
