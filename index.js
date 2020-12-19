@@ -31,10 +31,8 @@ var isPassiveSupported = (function() {
     return supportsPassive;
 })();
 
-
 var vueTouchEvents = {
-    install: function (Vue, constructorOptions) {
-
+    install: function (app, constructorOptions) {
         var globalOptions = Object.assign({}, {
             disableClick: false,
             tapTolerance: 10,  // px
@@ -267,8 +265,8 @@ var vueTouchEvents = {
             return $el.$$touchObj;
         }
 
-        Vue.directive('touch', {
-            bind: function ($el, binding) {
+        app.directive('touch', {
+            beforeMount: function ($el, binding) {
                 // build a touch configuration object
                 var $this = buildTouchObj($el);
                 // declare passive option for the event listener. Defaults to { passive: true } if supported
@@ -291,7 +289,7 @@ var vueTouchEvents = {
                             $this.callbacks.swipe.push(binding);
                         }
                         break;
-                    
+
                     case 'start':
                     case 'moving':
                         if (binding.modifiers.disablePassive) {
@@ -325,7 +323,7 @@ var vueTouchEvents = {
                 $this.hasBindTouchEvents = true;
             },
 
-            unbind: function ($el) {
+            unmounted: function ($el) {
                 $el.removeEventListener('touchstart', touchStartEvent);
                 $el.removeEventListener('touchmove', touchMoveEvent);
                 $el.removeEventListener('touchcancel', touchCancelEvent);
@@ -344,34 +342,23 @@ var vueTouchEvents = {
             }
         });
 
-        Vue.directive('touch-class', {
-            bind: function ($el, binding) {
+        app.directive('touch-class', {
+            beforeMount: function ($el, binding) {
                 buildTouchObj($el, {
                     touchClass: binding.value
                 });
             }
         });
 
-        Vue.directive('touch-options', {
-            bind: function($el, binding) {
+        app.directive('touch-options', {
+            beforeMount: function($el, binding) {
                 buildTouchObj($el, binding.value);
             }
         });
     }
 };
 
-
 /*
  * Exports
  */
-if (typeof module === 'object') {
-    module.exports = vueTouchEvents;
-
-} else if (typeof define === 'function' && define.amd) {
-    define([], function () {
-        return vueTouchEvents;
-    });
-} else if (window.Vue) {
-    window.vueTouchEvents = vueTouchEvents;
-    Vue.use(vueTouchEvents);
-}
+export default vueTouchEvents
