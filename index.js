@@ -31,6 +31,10 @@ var isPassiveSupported = (function() {
     return supportsPassive;
 })();
 
+// Save last touch time globally (touch start time or touch end time), if a `click` event triggered,
+// and the time near by the last touch time, this `click` event will be ignored. This is used for
+// resolve touch through issue.
+var globalLastTouchTime = 0;
 
 var vueTouchEvents = {
     install: function (Vue, constructorOptions) {
@@ -51,10 +55,10 @@ var vueTouchEvents = {
                 $el = this;
 
             if (isTouchEvent) {
-                $this.lastTouchStartTime = event.timeStamp;
+                globalLastTouchTime = event.timeStamp;
             }
 
-            if (isMouseEvent && $this.lastTouchStartTime && event.timeStamp - $this.lastTouchStartTime < 350) {
+            if (isMouseEvent && globalLastTouchTime && event.timeStamp - globalLastTouchTime < 350) {
                 return;
             }
 
@@ -131,7 +135,7 @@ var vueTouchEvents = {
                 isMouseEvent = event.type.indexOf('mouse') >= 0;
 
             if (isTouchEvent) {
-                $this.lastTouchEndTime = event.timeStamp;
+                globalLastTouchTime = event.timeStamp;
             }
 
             var touchholdEnd = isTouchEvent && !$this.touchHoldTimer;
@@ -141,7 +145,7 @@ var vueTouchEvents = {
 
             removeTouchClass(this);
 
-            if (isMouseEvent && $this.lastTouchEndTime && event.timeStamp - $this.lastTouchEndTime < 350) {
+            if (isMouseEvent && globalLastTouchTime && event.timeStamp - globalLastTouchTime < 350) {
                 return;
             }
 
@@ -298,6 +302,7 @@ var vueTouchEvents = {
                             // change the passive option for the moving event if disablePassive modifier exists
                             passiveOpt = false;
                         }
+                    // fallthrough
                     default:
                         $this.callbacks[eventType] = $this.callbacks[eventType] || [];
                         $this.callbacks[eventType].push(binding);
