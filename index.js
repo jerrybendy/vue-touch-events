@@ -218,7 +218,7 @@ var vueTouchEvents = {
                     e.stopPropagation();
                 }
 
-                if (binding.modifiers.prevent) {
+                if (binding.modifiers.prevent && e.cancelable) {
                     e.preventDefault();
                 }
 
