@@ -8,6 +8,8 @@ export interface Vue2TouchEventsOptions {
   tapTolerance?: number;
   swipeTolerance?: number;
   longTapTimeInterval?: number;
+  touchHoldTolerance?: number;
+  namespace?: string;
 }
 
 export default Vue2TouchEvents;

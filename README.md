@@ -12,6 +12,7 @@ Features:
 * Binding multiple touch events on one DOM element
 * Customizable events with native-likely events handler
 * Allow splitting configurations for different DOM elements by `v-touch-options` directive
+* Directive names can be customized to avoid namespace conflict
 
 ## Install
 
@@ -80,7 +81,7 @@ In your `.vue` file:
 <span v-touch:tap="tapHandler" v-touch-options="{touchClass: 'active'}">Customize touch class</span>
 ```
 
-If you use vue and this plugin in UMD way (in a script tag) , this plugin is auto used. So it's not necessary to wirte `Vue.use(Vue2TouchEvents)`.
+If you use vue and this plugin in UMD way (in a script tag) , this plugin is auto used. So it's not necessary to write `Vue.use(Vue2TouchEvents)`.
 
 ```html
 <script src="path/to/vue.js"></script>
@@ -98,7 +99,8 @@ Vue.use(Vue2TouchEvents, {
     tapTolerance: 10,
     touchHoldTolerance: 400,
     swipeTolerance: 30,
-    longTapTimeInterval: 400
+    longTapTimeInterval: 400,
+    namespace: 'touch'
 })
 ```
 
@@ -119,6 +121,8 @@ Vue.use(Vue2TouchEvents, {
 * `swipeTolerance` default `30`. The tolerance to ensure whether the swipe event effective or not.
 
 * `longTapTimeInterval` default `400` in millisecond. The minimum time interval to detect whether long tap event effective or not.
+
+* `namespace` default `touch`(v3.2.0). Customize the directive names to avoid namespace conflict. By default, the `touch` means `v-touch` and `v-touch-class` are available, and you can use `v-click` and `v-click-class` by change `namespace` to `click`.
 
 ### Directives
 

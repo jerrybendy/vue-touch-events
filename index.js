@@ -45,7 +45,8 @@ var vueTouchEvents = {
             swipeTolerance: 30,  // px
             touchHoldTolerance: 400,  // ms
             longTapTimeInterval: 400,  // ms
-            touchClass: ''
+            touchClass: '',
+            namespace: 'touch'
         }, constructorOptions);
 
         function touchStartEvent(event) {
@@ -271,7 +272,7 @@ var vueTouchEvents = {
             return $el.$$touchObj;
         }
 
-        Vue.directive('touch', {
+        Vue.directive(globalOptions.namespace, {
             bind: function ($el, binding) {
                 // build a touch configuration object
                 var $this = buildTouchObj($el);
@@ -349,7 +350,7 @@ var vueTouchEvents = {
             }
         });
 
-        Vue.directive('touch-class', {
+        Vue.directive(globalOptions.namespace + '-class', {
             bind: function ($el, binding) {
                 buildTouchObj($el, {
                     touchClass: binding.value
@@ -357,7 +358,7 @@ var vueTouchEvents = {
             }
         });
 
-        Vue.directive('touch-options', {
+        Vue.directive(globalOptions.namespace + '-options', {
             bind: function($el, binding) {
                 buildTouchObj($el, binding.value);
             }
