@@ -270,10 +270,25 @@ var vueTouchEvents = {
             $el.$$touchObj = touchObj;
             return $el.$$touchObj;
         }
+        function removePreviousEventListeners($el) {
+                $el.removeEventListener('touchstart', touchStartEvent);
+                $el.removeEventListener('touchmove', touchMoveEvent);
+                $el.removeEventListener('touchcancel', touchCancelEvent);
+                $el.removeEventListener('touchend', touchEndEvent);
 
-        Vue.directive('touch', {
-            bind: function ($el, binding) {
-                // build a touch configuration object
+                if ($el.$$touchObj && !$el.$$touchObj.options.disableClick) {
+                    $el.removeEventListener('mousedown', touchStartEvent);
+                    $el.removeEventListener('mousemove', touchMoveEvent);
+                    $el.removeEventListener('mouseup', touchEndEvent);
+                    $el.removeEventListener('mouseenter', mouseEnterEvent);
+                    $el.removeEventListener('mouseleave', mouseLeaveEvent);
+                }
+
+                // remove vars
+                delete $el.$$touchObj;
+        };
+        function bindNewEventListeners($el, binding) {
+             // build a touch configuration object
                 var $this = buildTouchObj($el);
                 // declare passive option for the event listener. Defaults to { passive: true } if supported
                 var passiveOpt = isPassiveSupported ? { passive: true } : false;
@@ -328,24 +343,18 @@ var vueTouchEvents = {
 
                 // set bind mark to true
                 $this.hasBindTouchEvents = true;
+        };
+        Vue.directive('touch', {
+            bind: function($el, binding) {
+                bindNewEventListeners($el, binding);
+            },
+            componentUpdated: function ($el, binding) {
+                removePreviousEventListeners($el);
+                bindNewEventListeners($el, binding);
             },
 
             unbind: function ($el) {
-                $el.removeEventListener('touchstart', touchStartEvent);
-                $el.removeEventListener('touchmove', touchMoveEvent);
-                $el.removeEventListener('touchcancel', touchCancelEvent);
-                $el.removeEventListener('touchend', touchEndEvent);
-
-                if ($el.$$touchObj && !$el.$$touchObj.options.disableClick) {
-                    $el.removeEventListener('mousedown', touchStartEvent);
-                    $el.removeEventListener('mousemove', touchMoveEvent);
-                    $el.removeEventListener('mouseup', touchEndEvent);
-                    $el.removeEventListener('mouseenter', mouseEnterEvent);
-                    $el.removeEventListener('mouseleave', mouseLeaveEvent);
-                }
-
-                // remove vars
-                delete $el.$$touchObj;
+                removePreviousEventListeners($el);
             }
         });
 
