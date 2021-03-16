@@ -12,10 +12,7 @@ Features:
 * Allow splitting configurations for different DOM elements by `v-touch-options` directive
 * Directive names can be customized to avoid namespace conflict
 
-Known Issues:
-
-* This is for **vue.js 2.x** only.
-* Default namespace **conflicts** with Veutify, see #24
+**This is for **vue.js 2.x** only**
 
 ## Install
 
@@ -258,6 +255,17 @@ export default {
     }
   }
 }
+```
+
+### How to resolve conflict with vuetify
+Upgrade to the latest version (>= v3.2.0), and use the `namespace` parameter. For example:
+
+```js
+import Vue2TouchEvents from 'vue2-touch-events'
+
+Vue.use(Vue2TouchEvents, {
+    namespace: 'my-touch'
+})
 ```
 
 ## Change History
