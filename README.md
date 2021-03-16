@@ -2,8 +2,6 @@
 
 Enable tap / swipe / touch hold events for vue.js 2.x
 
-> Note: This is for **vue.js 2.x** only.
-
 Features:
 
 * Common touch events, such as `tap`, `swipe`, `touchhold` ([more](#Bindings))
@@ -13,6 +11,11 @@ Features:
 * Customizable events with native-likely events handler
 * Allow splitting configurations for different DOM elements by `v-touch-options` directive
 * Directive names can be customized to avoid namespace conflict
+
+Known Issues:
+
+* This is for **vue.js 2.x** only.
+* Default namespace **conflicts** with Veutify, see #24
 
 ## Install
 
