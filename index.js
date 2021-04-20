@@ -207,7 +207,7 @@ var vueTouchEvents = {
             var $this = $el.$$touchObj;
 
             // get the callback list
-            var callbacks = $this.callbacks[eventType] || [];
+            var callbacks = $this && $this.callbacks[eventType] || [];
             if (callbacks.length === 0) {
                 return null;
             }
