@@ -12,7 +12,7 @@ Features:
 * Allow splitting configurations for different DOM elements by `v-touch-options` directive
 * Directive names can be customized to avoid namespace conflict
 
-**This is for **vue.js 2.x** only**
+**This is for **vue.js 2.x** only. For vue.js 3.x see [this library](https://github.com/robinrodricks/vue3-touch-events).**
 
 ## Install
 
