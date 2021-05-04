@@ -79,6 +79,9 @@ In your `.vue` file:
 <span v-touch:tap="tapHandler" v-touch-class="active">Customize touch class</span>
 <!-- or -->
 <span v-touch:tap="tapHandler" v-touch-options="{touchClass: 'active'}">Customize touch class</span>
+
+<!-- change the directive name to others -->
+<span v-kiss:tap="tapHandler">Change namespace to 'kiss'</span>
 ```
 
 If you use vue and this plugin in UMD way (in a script tag) , this plugin is auto used. So it's not necessary to write `Vue.use(Vue2TouchEvents)`.
